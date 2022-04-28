@@ -1,5 +1,14 @@
 name: Build Image
 on: 
+  # 手动触发事件
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
   push:
     branches: [ main ]
   schedule:
@@ -8,6 +17,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "Log level: ${{ github.event.inputs.logLevel }}"
+          echo "Tags: ${{ github.event.inputs.tags }}"
+          echo "Inputs: ${{ toJson(github.event.inputs) }}"
       - name: Check Out Repo 
         uses: actions/checkout@v2
       - name: Cache Docker layers
