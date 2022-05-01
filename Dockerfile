@@ -1,3 +1,4 @@
+# docker build -t leehom/rss2email .
 # Running it will be something like this:
 #
 #    docker run -d \
@@ -10,22 +11,21 @@
 ###########################################################################
 FROM golang:alpine AS builder
 
-LABEL org.opencontainers.image.source=https://github.com/skx/rss2email/
+LABEL org.opencontainers.image.source=https://github.com/clh021/rss2email/
 
 # Ensure we have git
 RUN apk update && apk add --no-cache git
 
 # Create a working-directory
-WORKDIR $GOPATH/src/github.com/skx/rss2email/
+WORKDIR $GOPATH/src/github.com/clh021
 
-# Copy the source to it
-COPY . .
+# Clone the source
+RUN git clone --depth=1 https://github.com/clh021/rss2email
 
-# Get the dependencies
-RUN go get -d -v
-
-# Build the binary.
-RUN go build -o /go/bin/rss2email
+# Build the binary
+RUN cd rss2email \
+    && GO111MODULE=on GOPROXY=https://goproxy.cn \
+    go build -o /go/bin/rss2email
 
 RUN ls -ltr /go/bin
 
