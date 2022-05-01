@@ -39,5 +39,5 @@ WORKDIR /app
 
 # Copy the binary.
 COPY --from=builder /go/bin/rss2email /app/
-
+ADD entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
